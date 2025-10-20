@@ -12,12 +12,12 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
+            VStack(spacing: 29) {
                 // Plant image (matches your asset name)
                 Image("planto")
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 220)
+                    .frame(width: 164, height: 200)
                     .accessibilityLabel("Planto plant illustration")
 
                 // Title and description
@@ -26,7 +26,7 @@ struct ContentView: View {
                         .font(.title2)
                         .bold()
 
-                    Text("Now all your plants will be in one place and we will help you take care of them 🙂🌿")
+                    Text("Now all your plants will be in one place and we will help you take care of them :)🪴")
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal)
@@ -41,7 +41,7 @@ struct ContentView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(Color.green.opacity(0.9))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .clipShape(Capsule())
                         .padding(.horizontal, 32)
                 }
@@ -49,12 +49,19 @@ struct ContentView: View {
                 Spacer()
             }
             .padding(.top, 16)
-            .navigationTitle("My Plants 🌿")
+            .navigationTitle("My Plants 🌱")
         }
         // Presents the pop-up sheet
         .sheet(isPresented: $showSetReminder) {
             SetReminderView()
         }
+  
     }
 }
+
+#Preview("ContentView – Dark") {
+    ContentView()
+        .preferredColorScheme(.dark)
+}
+
 
