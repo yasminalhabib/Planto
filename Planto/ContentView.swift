@@ -21,7 +21,7 @@ struct ContentView: View {
                     .accessibilityLabel("Planto plant illustration")
 
                 // Title and description
-                VStack(spacing: 8) {
+                VStack(spacing: 20) {
                     Text("Start your plant journey!")
                         .font(.title2)
                         .bold()
@@ -32,18 +32,20 @@ struct ContentView: View {
                         .padding(.horizontal)
                 }
 
-                // Button to open the pop-up
+                // Push the button lower
+                Spacer(minLength: 60)
+
+                // Button to open the pop-up (no glassy effect)
                 Button {
                     showSetReminder = true
                 } label: {
                     Text("Set Plant Reminder")
                         .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(Color.green.opacity(0.9))
                         .foregroundColor(.black)
+                        .frame(width: 280, height: 44) // fixed size
+                        .background(Color("green").opacity(0.9)) // solid color from Assets
                         .clipShape(Capsule())
-                        .padding(.horizontal, 32)
+                        .shadow(color: Color("green").opacity(0.3), radius: 6, y: 3)
                 }
 
                 Spacer()
@@ -55,7 +57,6 @@ struct ContentView: View {
         .sheet(isPresented: $showSetReminder) {
             SetReminderView()
         }
-  
     }
 }
 
@@ -63,5 +64,6 @@ struct ContentView: View {
     ContentView()
         .preferredColorScheme(.dark)
 }
+
 
 
