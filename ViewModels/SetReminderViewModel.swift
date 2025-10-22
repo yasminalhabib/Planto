@@ -8,21 +8,17 @@
 import SwiftUI
 import Combine
 
+// ViewModels/SetReminderViewModel.swift
 final class SetReminderViewModel: ObservableObject {
     @Published var plantName: String = ""
     @Published var room: String = "Bedroom"
-    @Published var light: String = "Full Sun"
+    @Published var light: String = "Full sun"     // note lowercase “sun” if you want the exact label
     @Published var wateringDays: String = "Every day"
     @Published var waterAmount: String = "20–50 ml"
 
-    // Enable the check button only when valid
-    var canSave: Bool {
-        !plantName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-
     func buildReminder() -> PlantReminder {
         PlantReminder(
-            plantName: plantName.trimmingCharacters(in: .whitespacesAndNewlines),
+            plantName: plantName.isEmpty ? "Unnamed Plant" : plantName,
             room: room,
             light: light,
             wateringDays: wateringDays,
@@ -30,4 +26,5 @@ final class SetReminderViewModel: ObservableObject {
         )
     }
 }
+
 

@@ -15,18 +15,6 @@ struct ContentView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     
-                    // MARK: Header (matches screenshot)
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("My Plants 🌱")
-                            .font(.system(size: 44, weight: .bold, design: .default))
-                            .kerning(-0.5)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        Divider()
-                            .overlay(Color.primary.opacity(0.25))
-                    }
-                    .padding(.top, 8)
-                    
                     // MARK: Illustration
                     Image("planto")
                         .resizable()
@@ -76,15 +64,14 @@ struct ContentView: View {
                 .padding(.horizontal, 24)
                 .padding(.bottom, 24)
             }
-            .navigationBarTitleDisplayMode(.inline) // we use custom header; keep nav bar slim
+            .navigationTitle("My Plants 🌱")
+            .navigationBarTitleDisplayMode(.large) // large, left-aligned title
             .toolbar { /* no buttons here to keep the mock exact */ }
         }
         // Only force scheme if user opted to override (optional dark mode)
         .preferredColorScheme(vm.useCustomAppearance ? (vm.isDarkMode ? .dark : .light) : nil)
         .sheet(isPresented: $vm.showSetReminder) {
-            SetReminderView(viewModel: SetReminderViewModel()) { newReminder in
-                vm.addReminder(newReminder)
-            }
+            SetReminderView()
         }
     }
 }
