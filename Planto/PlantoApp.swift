@@ -11,7 +11,8 @@ import SwiftUI
 struct PlantoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView() // entry point
+                .preferredColorScheme(.dark)
         }
     }
 }

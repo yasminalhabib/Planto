@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5024F68D2EA843A0003BE691 /* SetReminderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5024F68C2EA84306003BE691 /* SetReminderViewModel.swift */; };
+		5024F68E2EA843A7003BE691 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5024F68B2EA842B3003BE691 /* ContentViewModel.swift */; };
+		5024F68F2EA843AE003BE691 /* PlantReminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5024F6892EA8424B003BE691 /* PlantReminder.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		5024F5542EA24306003BE691 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +33,9 @@
 		5024F5462EA24305003BE691 /* Planto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Planto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5024F5532EA24306003BE691 /* PlantoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlantoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5024F55D2EA24306003BE691 /* PlantoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlantoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5024F6892EA8424B003BE691 /* PlantReminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantReminder.swift; sourceTree = "<group>"; };
+		5024F68B2EA842B3003BE691 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		5024F68C2EA84306003BE691 /* SetReminderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetReminderViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +84,8 @@
 		5024F53D2EA24305003BE691 = {
 			isa = PBXGroup;
 			children = (
+				5024F68A2EA84285003BE691 /* ViewModels */,
+				5024F6882EA841AA003BE691 /* Models */,
 				5024F5482EA24305003BE691 /* Planto */,
 				5024F5562EA24306003BE691 /* PlantoTests */,
 				5024F5602EA24306003BE691 /* PlantoUITests */,
@@ -90,6 +101,23 @@
 				5024F55D2EA24306003BE691 /* PlantoUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5024F6882EA841AA003BE691 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5024F6892EA8424B003BE691 /* PlantReminder.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5024F68A2EA84285003BE691 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				5024F68C2EA84306003BE691 /* SetReminderViewModel.swift */,
+				5024F68B2EA842B3003BE691 /* ContentViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,6 +264,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5024F68F2EA843AE003BE691 /* PlantReminder.swift in Sources */,
+				5024F68D2EA843A0003BE691 /* SetReminderViewModel.swift in Sources */,
+				5024F68E2EA843A7003BE691 /* ContentViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
