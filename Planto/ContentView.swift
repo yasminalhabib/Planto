@@ -1,19 +1,21 @@
-//
-//  ContentView.swift
-//  Planto
-//
-//  Created by Yasmin Alhabib on 17/10/2025.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var vm = ContentViewModel()
+    @StateObject private var vm: ContentViewModel
+
+    init(vm: ContentViewModel = ContentViewModel()) {
+        _vm = StateObject(wrappedValue: vm)
+    }
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
+                    
+                    Divider()
+                        .opacity(0.25)
+                        .padding(.horizontal, 20)
+                        .padding(.top, 4)
                     
                     // MARK: Illustration
                     Image("planto")
@@ -43,10 +45,9 @@ struct ContentView: View {
                     .padding(.top, 4)
                     .frame(maxWidth: .infinity)
                     
-                    // Push button a bit higher while keeping center alignment
                     Spacer(minLength: 80)
                     
-                    // Mark: Button (exact Sketch size 280 x 44)
+                    // MARK: Button
                     Button {
                         vm.showSetReminder = true
                     } label: {
@@ -58,58 +59,23 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .buttonStyle(GreenCapsuleButtonStyle())
                     
-                    // Bottom breathing room
                     Spacer(minLength: 40)
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 24)
             }
             .navigationTitle("My Plants 🌱")
-            .navigationBarTitleDisplayMode(.large) // large, left-aligned title
-            .toolbar { /* no buttons here to keep the mock exact */ }
+            .navigationBarTitleDisplayMode(.large)
+            // 👉 THIS IS KEY: Navigation happens INSIDE NavigationStack
+            .navigationDestination(isPresented: $vm.navigateToList) {
+                ListRemindersView(vm: vm)
+            }
         }
-        // Only force scheme if user opted to override (optional dark mode)
         .preferredColorScheme(vm.useCustomAppearance ? (vm.isDarkMode ? .dark : .light) : nil)
+        // 👉 Sheet is OUTSIDE NavigationStack but still works
         .sheet(isPresented: $vm.showSetReminder) {
             SetReminderView()
+                .environmentObject(vm)
         }
     }
-}
-
-// MARK: - Button Style (uses asset color "green")
-private struct GreenCapsuleButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .foregroundStyle(Color.black.opacity(0.9))
-            .background(
-                Capsule()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color("greeny"),
-                                Color("greeny").opacity(0.85)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-            )
-            .overlay(
-                Capsule()
-                    .stroke(Color.white.opacity(0.18), lineWidth: 1)
-            )
-            .shadow(color: Color("greeny").opacity(0.35), radius: 10, x: 0, y: 6)
-            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
-    }
-}
-
-#Preview("ContentView – Dark mock") {
-    ContentView()
-        .environment(\.colorScheme, .dark)
-}
-
-#Preview("ContentView – Light") {
-    ContentView()
-        .environment(\.colorScheme, .light)
 }

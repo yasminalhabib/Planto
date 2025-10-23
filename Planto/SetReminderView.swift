@@ -39,7 +39,7 @@ struct SetReminderView: View {
                         ForEach(daysOptions, id: \.self) { Text($0) }
                     }
 
-                    Picker("Water Amount", selection: $waterAmount) {
+                    Picker("Water", selection: $waterAmount) {
                         ForEach(waterOptions, id: \.self) { Text($0) }
                     }
                 }

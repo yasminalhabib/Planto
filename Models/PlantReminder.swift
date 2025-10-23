@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PlantReminder: Identifiable, Equatable {
+struct PlantReminder: Identifiable {
     let id = UUID()
     var plantName: String
     var room: String
