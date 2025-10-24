@@ -3,7 +3,7 @@ import SwiftUI
 struct GreenCapsuleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundStyle(.black) // changed from .white to .black
+            .foregroundStyle(.white) // changed from .black to .white
             .background(
                 Capsule()
                     .fill(Color("greeny"))

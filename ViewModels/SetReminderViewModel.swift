@@ -24,6 +24,7 @@ final class SetReminderViewModel: ObservableObject {
             wateringDays: wateringDays,
             waterAmount: waterAmount
         )
+        
     }
 }
 

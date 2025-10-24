@@ -16,6 +16,10 @@ final class ContentViewModel: ObservableObject {
     @Published var completed: Set<UUID> = []         // track completed reminder IDs
     @Published var navigateToList: Bool = false      // drives navigation from landing to list
     
+    // 👉 NEW: For edit sheet
+    @Published var showEditSheet = false
+    @Published var plantToEdit: PlantReminder?
+    
     // Optional dark-mode override (kept, but no UI here so layout matches the mock)
     @AppStorage("useCustomAppearance") var useCustomAppearance: Bool = false
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
@@ -52,6 +56,30 @@ final class ContentViewModel: ObservableObject {
             completed.remove(id)
         } else {
             completed.insert(id)
+        }
+    }
+    
+    // Delete a plant reminder
+    func deleteReminder(_ id: UUID) {
+        // Remove from reminders array
+        reminders.removeAll { $0.id == id }
+        
+        // Also remove from completed set if it was checked
+        completed.remove(id)
+    }
+    
+    // 👉 NEW: Update an existing plant reminder
+    func updateReminder(id: UUID, plantName: String, room: String, light: String, wateringDays: String, waterAmount: String) {
+        if let index = reminders.firstIndex(where: { $0.id == id }) {
+            reminders[index] = PlantReminder(
+                id: id,  // Keep the same ID!
+                plantName: plantName,
+                room: room,
+                light: light,
+                wateringDays: wateringDays,
+                waterAmount: waterAmount
+            )
+            print("✏️ Plant updated: \(plantName)")
         }
     }
 }

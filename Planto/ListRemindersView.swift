@@ -36,6 +36,18 @@ struct ListRemindersView: View {
                                     onToggle: { vm.toggleCompleted(item.id) }
                                 )
                                 .background(Color(.secondarySystemBackground))
+                                // 👉 Tap to edit
+                                .onTapGesture {
+                                    vm.plantToEdit = item
+                                }
+                                // 👉 Swipe to delete
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        vm.deleteReminder(item.id)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
                             }
                         }
                         .padding(.top, 8)
@@ -57,12 +69,16 @@ struct ListRemindersView: View {
             .navigationTitle("My Plants 🌱")
             .navigationBarTitleDisplayMode(.large)
         }
-        // Present your SetReminderView and feed the result into the VM
+        // Present SetReminderView for adding new plants
         .sheet(isPresented: $vm.showAddSheet) {
             SetReminderView()
                 .environmentObject(vm)
         }
-
+        // 👉 NEW: Present EditPlantView for editing existing plants
+        .sheet(item: $vm.plantToEdit) { plant in
+            EditPlantView(plantToEdit: plant)
+                .environmentObject(vm)
+        }
         // Show the "All Done" page when progress hits 100%
         .onAppear {
             showAllDone = vm.progress == 1.0 && !vm.reminders.isEmpty
@@ -155,7 +171,17 @@ private struct FloatingAddButton: View {
 // MARK: - Previews
 
 #Preview("List – Empty (Dark)") {
-    let vm = ContentViewModel()              // no reminders
+    let vm = ContentViewModel()
+    return NavigationStack { ListRemindersView(vm: vm) }
+        .preferredColorScheme(.dark)
+}
+
+#Preview("List with plants") {
+    let vm = ContentViewModel()
+    vm.reminders = [
+        PlantReminder(plantName: "Monstera", room: "Kitchen", light: "Full sun", wateringDays: "Every day", waterAmount: "20–50 ml"),
+        PlantReminder(plantName: "Pothos", room: "Bedroom", light: "Full sun", wateringDays: "Every day", waterAmount: "20–50 ml")
+    ]
     return NavigationStack { ListRemindersView(vm: vm) }
         .preferredColorScheme(.dark)
 }
