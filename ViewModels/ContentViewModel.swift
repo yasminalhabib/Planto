@@ -16,11 +16,11 @@ final class ContentViewModel: ObservableObject {
     @Published var completed: Set<UUID> = []         // track completed reminder IDs
     @Published var navigateToList: Bool = false      // drives navigation from landing to list
     
-    // 👉 NEW: For edit sheet
+    // For edit sheet
     @Published var showEditSheet = false
     @Published var plantToEdit: PlantReminder?
     
-    // Optional dark-mode override (kept, but no UI here so layout matches the mock)
+    // Optional dark-mode override
     @AppStorage("useCustomAppearance") var useCustomAppearance: Bool = false
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
     
@@ -43,6 +43,9 @@ final class ContentViewModel: ObservableObject {
     func addReminder(_ reminder: PlantReminder) {
         reminders.append(reminder)
         
+        // 👉 Schedule notification for this plant
+        NotificationManager.shared.scheduleNotification(for: reminder)
+        
         // Dismiss any open sheets
         showSetReminder = false
         showAddSheet = false
@@ -61,6 +64,9 @@ final class ContentViewModel: ObservableObject {
     
     // Delete a plant reminder
     func deleteReminder(_ id: UUID) {
+        // 👉 Cancel notification when deleting
+        NotificationManager.shared.cancelNotification(for: id)
+        
         // Remove from reminders array
         reminders.removeAll { $0.id == id }
         
@@ -68,10 +74,10 @@ final class ContentViewModel: ObservableObject {
         completed.remove(id)
     }
     
-    // 👉 NEW: Update an existing plant reminder
+    // Update an existing plant reminder
     func updateReminder(id: UUID, plantName: String, room: String, light: String, wateringDays: String, waterAmount: String) {
         if let index = reminders.firstIndex(where: { $0.id == id }) {
-            reminders[index] = PlantReminder(
+            let updatedReminder = PlantReminder(
                 id: id,  // Keep the same ID!
                 plantName: plantName,
                 room: room,
@@ -79,6 +85,12 @@ final class ContentViewModel: ObservableObject {
                 wateringDays: wateringDays,
                 waterAmount: waterAmount
             )
+            reminders[index] = updatedReminder
+            
+            // 👉 Reschedule notification with new settings
+            NotificationManager.shared.cancelNotification(for: id)
+            NotificationManager.shared.scheduleNotification(for: updatedReminder)
+            
             print("✏️ Plant updated: \(plantName)")
         }
     }
