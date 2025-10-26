@@ -73,7 +73,7 @@ struct AllRemindersCompletedView: View {
 }
 
 /// Reusable floating add button (uses asset color "greeny")
-private struct FloatingAddButton: View {
+struct FloatingAddButton: View {
     var action: () -> Void
     var body: some View {
         Button(action: action) {
