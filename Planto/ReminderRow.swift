@@ -11,51 +11,82 @@ struct ReminderRow: View {
     let item: PlantReminder
     let checked: Bool
     let onToggle: () -> Void
-
+    
     var body: some View {
-        HStack(spacing: 12) {
-            // Check circle
+        HStack(spacing: 16) {
+            // Checkmark circle
             Button(action: onToggle) {
-                Image(systemName: checked ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(checked ? Color("greeny") : .secondary)
-                    .contentShape(Circle())
+                ZStack {
+                    Circle()
+                        .strokeBorder(checked ? Color("greeny") : Color.white.opacity(0.3), lineWidth: 2)
+                        .frame(width: 28, height: 28)
+                    
+                    if checked {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(Color("greeny"))
+                    }
+                }
             }
             .buttonStyle(.plain)
-            .padding(.leading, 16)
-            .padding(.vertical, 12)
-
+            
             // Plant info
-            VStack(alignment: .leading, spacing: 4) {
-                Text(item.plantName)
-                    .font(.headline)
-                    .foregroundStyle(.primary)
-                    .strikethrough(checked, color: .secondary)
-
-                HStack(spacing: 8) {
-                    Label(item.room, systemImage: "house")
-                    Label(item.light, systemImage: "sun.max")
-                    Label(item.wateringDays, systemImage: "calendar")
-                    Label(item.waterAmount, systemImage: "drop")
+            VStack(alignment: .leading, spacing: 8) {
+                // Room label
+                HStack(spacing: 6) {
+                    Image(systemName: "paperplane")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    Text("in \(item.room)")
+                        .font(.caption)
+                        .foregroundColor(.gray)
                 }
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
+                
+                // Plant name - 👉 REMOVED strikethrough
+                Text(item.plantName)
+                    .font(.system(size: 22, weight: .regular))
+                    .foregroundColor(checked ? .gray : .white)
+                
+                // Tags (light and water)
+                HStack(spacing: 8) {
+                    TagPill(icon: "sun.max", text: item.light)
+                    TagPill(icon: "drop", text: item.waterAmount)
+                }
             }
-            .padding(.vertical, 12)
-
-            Spacer(minLength: 8)
+            
+            Spacer()
         }
-        .background(Color(.secondarySystemBackground))
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
+        .background(Color.black)
     }
 }
 
-#Preview {
+// MARK: - Tag Pill
+private struct TagPill: View {
+    let icon: String
+    let text: String
+    
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.caption2)
+            Text(text)
+                .font(.caption2)
+        }
+        .foregroundColor(.white.opacity(0.7))
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background(Color.white.opacity(0.1))
+        .cornerRadius(12)
+    }
+}
+
+#Preview("Unchecked") {
     ReminderRow(
         item: PlantReminder(
-            plantName: "Snake Plant",
-            room: "Bedroom",
+            plantName: "Monstera",
+            room: "Kitchen",
             light: "Full sun",
             wateringDays: "Every day",
             waterAmount: "20–50 ml"
@@ -63,8 +94,23 @@ struct ReminderRow: View {
         checked: false,
         onToggle: {}
     )
+    .background(Color.black)
     .previewLayout(.sizeThatFits)
-    .padding()
-    .background(Color(.systemBackground))
+}
+
+#Preview("Checked") {
+    ReminderRow(
+        item: PlantReminder(
+            plantName: "Pothos",
+            room: "Bedroom",
+            light: "Full sun",
+            wateringDays: "Every day",
+            waterAmount: "20–50 ml"
+        ),
+        checked: true,
+        onToggle: {}
+    )
+    .background(Color.black)
+    .previewLayout(.sizeThatFits)
 }
 

@@ -8,25 +8,32 @@ struct ListRemindersView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                // Black background
+                Color.black.ignoresSafeArea()
+                
                 // MAIN CONTENT
                 VStack(spacing: 16) {
                     Divider()
-                        .opacity(0.25)
+                        .background(Color.white.opacity(0.2))
                         .padding(.horizontal, 20)
 
-                    // Header + progress (inline)
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(vm.headerLine)
-                            .font(.callout)
-                            .foregroundStyle(.secondary)
-
+                    // Status message + progress bar
+                    VStack(spacing: 12) {
+                        // 👉 FIX: Access the property directly
+                        Text(statusText)
+                            .font(.body)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        
                         ProgressView(value: vm.progress, total: 1.0)
-                            .progressViewStyle(.linear)
-                            .tint(Color("greeny"))
+                            .progressViewStyle(LinearProgressViewStyle(tint: Color("greeny")))
+                            .scaleEffect(y: 2)
+                            .frame(height: 4)
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 40)
+                    .padding(.top, 8)
 
-                    // Reminders list (inline)
+                    // Reminders list
                     List {
                         ForEach(vm.reminders) { item in
                             ReminderRow(
@@ -36,8 +43,10 @@ struct ListRemindersView: View {
                             )
                             .contentShape(Rectangle())
                             .onTapGesture { vm.plantToEdit = item }
-                            .listRowBackground(Color(uiColor: .secondarySystemBackground))
+                            .listRowBackground(Color.black)
                             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            .listRowSeparator(.visible, edges: .bottom)
+                            .listRowSeparatorTint(Color.white.opacity(0.1))
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
                                     vm.deleteReminder(item.id)
@@ -49,6 +58,7 @@ struct ListRemindersView: View {
                     }
                     .listStyle(.plain)
                     .scrollContentBackground(.hidden)
+                    .background(Color.black)
                 }
 
                 // FLOATING (+) BUTTON OVERLAY
@@ -56,15 +66,26 @@ struct ListRemindersView: View {
                     Spacer()
                     HStack {
                         Spacer()
-                        FloatingAddButton { vm.showAddSheet = true }
-                            .padding(20)
+                        Button(action: { vm.showAddSheet = true }) {
+                            Image(systemName: "plus")
+                                .font(.system(size: 24, weight: .semibold))
+                                .foregroundStyle(.white)
+                                .frame(width: 60, height: 60)
+                                .background(Color("greeny"))
+                                .clipShape(Circle())
+                                .shadow(color: Color("greeny").opacity(0.4), radius: 12, y: 6)
+                        }
+                        .padding(20)
                     }
                 }
             }
             .navigationTitle("My Plants 🌱")
             .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(Color.black, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
-        // SHEETS & PRESENTATION (inline)
+        .preferredColorScheme(.dark)
         .sheet(isPresented: $vm.showAddSheet) {
             SetReminderView()
                 .environmentObject(vm)
@@ -76,7 +97,6 @@ struct ListRemindersView: View {
         .onAppear { updateAllDoneFlag() }
         .onChange(of: vm.progress) { _ in updateAllDoneFlag(withHaptics: false) }
         .onChange(of: vm.completed) { _ in updateAllDoneFlag(withHaptics: true) }
-      //  .onChange(of: vm.reminders) { _ in updateAllDoneFlag(withHaptics: false) }
         .fullScreenCover(isPresented: $showAllDone) {
             AllRemindersCompletedView(onAddTapped: {
                 showAllDone = false
@@ -85,8 +105,23 @@ struct ListRemindersView: View {
         }
     }
 
-    // MARK: - Helpers
+    // 👉 FIX: Create computed property in the View
+    private var statusText: String {
+        let total = vm.reminders.count
+        let done = vm.completed.count
+        
+        if total == 0 {
+            return "Your plants are waiting for a sip 💧"
+        } else if done == total {
+            return "\(total) of your plants feel loved today ✨"
+        } else if done == 0 {
+            return "Your plants are waiting for a sip 💧"
+        } else {
+            return "\(done) of your plants feel loved today ✨"
+        }
+    }
 
+    // MARK: - Helpers
     private func updateAllDoneFlag(withHaptics: Bool = false) {
         let allDone = !vm.reminders.isEmpty && vm.completed.count == vm.reminders.count
         withAnimation(.spring()) { showAllDone = allDone }
@@ -94,6 +129,27 @@ struct ListRemindersView: View {
             UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         }
     }
+}
+
+// 👉 REMOVED FloatingAddButton struct - now inline in the ZStack
+
+#Preview("Empty List") {
+    let vm = ContentViewModel()
+    return ListRemindersView(vm: vm)
+}
+
+#Preview("With Plants") {
+    let vm = ContentViewModel()
+    vm.reminders = [
+        PlantReminder(plantName: "Monstera", room: "Kitchen", light: "Full sun", wateringDays: "Every day", waterAmount: "20–50 ml"),
+        PlantReminder(plantName: "Pothos", room: "Bedroom", light: "Full sun", wateringDays: "Every day", waterAmount: "20–50 ml"),
+        PlantReminder(plantName: "Orchid", room: "Living Room", light: "Full sun", wateringDays: "Every day", waterAmount: "20–50 ml"),
+        PlantReminder(plantName: "Spider", room: "Kitchen", light: "Full sun", wateringDays: "Every day", waterAmount: "20–50 ml")
+    ]
+    vm.completed.insert(vm.reminders[1].id)
+    vm.completed.insert(vm.reminders[2].id)
+    vm.completed.insert(vm.reminders[3].id)
+    return ListRemindersView(vm: vm)
 }
 
 

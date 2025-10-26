@@ -32,6 +32,22 @@ final class ContentViewModel: ObservableObject {
         return "\(done) of \(total) completed"
     }
     
+    // 👉 NEW: Status message for the list view (matches design)
+    var statusMessage: String {
+        let total = reminders.count
+        let done = completed.count
+        
+        if total == 0 {
+            return "Your plants are waiting for a sip 💧"
+        } else if done == total {
+            return "\(total) of your plants feel loved today ✨"
+        } else if done == 0 {
+            return "Your plants are waiting for a sip 💧"
+        } else {
+            return "\(done) of your plants feel loved today ✨"
+        }
+    }
+    
     // Linear progress 0...1
     var progress: Double {
         let total = reminders.count
@@ -43,7 +59,7 @@ final class ContentViewModel: ObservableObject {
     func addReminder(_ reminder: PlantReminder) {
         reminders.append(reminder)
         
-        // 👉 Schedule notification for this plant
+        // Schedule notification for this plant
         NotificationManager.shared.scheduleNotification(for: reminder)
         
         // Dismiss any open sheets
@@ -64,7 +80,7 @@ final class ContentViewModel: ObservableObject {
     
     // Delete a plant reminder
     func deleteReminder(_ id: UUID) {
-        // 👉 Cancel notification when deleting
+        // Cancel notification when deleting
         NotificationManager.shared.cancelNotification(for: id)
         
         // Remove from reminders array
@@ -87,7 +103,7 @@ final class ContentViewModel: ObservableObject {
             )
             reminders[index] = updatedReminder
             
-            // 👉 Reschedule notification with new settings
+            // Reschedule notification with new settings
             NotificationManager.shared.cancelNotification(for: id)
             NotificationManager.shared.scheduleNotification(for: updatedReminder)
             
