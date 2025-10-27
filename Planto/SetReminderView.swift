@@ -8,7 +8,7 @@ import SwiftUI
 
 struct SetReminderView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var vm: ContentViewModel  // 👈 ADD THIS LINE!
+    @EnvironmentObject var vm: ContentViewModel
 
     @State private var plantName: String = ""
     @State private var room: String = "Bedroom"
@@ -28,23 +28,41 @@ struct SetReminderView: View {
                     TextField("Plant Name", text: $plantName)
                 }
 
-                Section(header: Text("Room & Light")) {
-                    Picker("Room", selection: $room) {
-                        ForEach(roomOptions, id: \.self) { Text($0) }
+                // 👉 REMOVED header: Text("Room & Light")
+                Section {
+                    // 👉 ADDED icon
+                    HStack {
+                        Image(systemName: "paperplane")
+                        Picker("Room", selection: $room) {
+                            ForEach(roomOptions, id: \.self) { Text($0) }
+                        }
                     }
 
-                    Picker("Light", selection: $light) {
-                        ForEach(lightOptions, id: \.self) { Text($0) }
+                    // 👉 ADDED icon
+                    HStack {
+                        Image(systemName: "sun.max")
+                        Picker("Light", selection: $light) {
+                            ForEach(lightOptions, id: \.self) { Text($0) }
+                        }
                     }
                 }
 
-                Section(header: Text("Watering")) {
-                    Picker("Watering Days", selection: $wateringDays) {
-                        ForEach(daysOptions, id: \.self) { Text($0) }
+                // 👉 REMOVED header: Text("Watering")
+                Section {
+                    // 👉 ADDED icon
+                    HStack {
+                        Image(systemName: "drop")
+                        Picker("Watering Days", selection: $wateringDays) {
+                            ForEach(daysOptions, id: \.self) { Text($0) }
+                        }
                     }
 
-                    Picker("Water Amount", selection: $waterAmount) {
-                        ForEach(waterOptions, id: \.self) { Text($0) }
+                    // 👉 ADDED icon, CHANGED "Water Amount" to "Water"
+                    HStack {
+                        Image(systemName: "drop")
+                        Picker("Water", selection: $waterAmount) {
+                            ForEach(waterOptions, id: \.self) { Text($0) }
+                        }
                     }
                 }
             }
@@ -67,14 +85,13 @@ struct SetReminderView: View {
                             .foregroundColor(.white)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(Color("greeny").opacity(0.65))  // 👈 Changed to use Color asset name
+                    .tint(Color("greeny").opacity(0.65))
                 }
             }
         }
     }
 
     func saveReminder() {
-        // Create the plant reminder
         let reminder = PlantReminder(
             plantName: plantName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                 ? "Unnamed Plant" : plantName,
@@ -85,16 +102,12 @@ struct SetReminderView: View {
         )
         
         print("Saved: \(plantName)")
-        
-        // Add to ViewModel
         vm.addReminder(reminder)
-        
-        // Dismiss sheet
         dismiss()
     }
 }
 
 #Preview {
     SetReminderView()
-        .environmentObject(ContentViewModel())  // 👈 ADD THIS for preview!
+        .environmentObject(ContentViewModel())
 }

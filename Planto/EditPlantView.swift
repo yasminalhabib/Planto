@@ -27,34 +27,51 @@ struct EditPlantView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // 👉 Form takes available space
                 Form {
                     Section {
                         TextField("Plant Name", text: $plantName)
                     }
                     
-                    Section(header: Text("Room & Light")) {
-                        Picker("Room", selection: $room) {
-                            ForEach(roomOptions, id: \.self) { Text($0) }
+                    // 👉 REMOVED header: Text("Room & Light")
+                    Section {
+                        // 👉 ADDED icon
+                        HStack {
+                            Image(systemName: "paperplane")
+                            Picker("Room", selection: $room) {
+                                ForEach(roomOptions, id: \.self) { Text($0) }
+                            }
                         }
                         
-                        Picker("Light", selection: $light) {
-                            ForEach(lightOptions, id: \.self) { Text($0) }
+                        // 👉 ADDED icon
+                        HStack {
+                            Image(systemName: "sun.max")
+                            Picker("Light", selection: $light) {
+                                ForEach(lightOptions, id: \.self) { Text($0) }
+                            }
                         }
                     }
                     
-                    Section(header: Text("Watering")) {
-                        Picker("Watering Days", selection: $wateringDays) {
-                            ForEach(daysOptions, id: \.self) { Text($0) }
+                    // 👉 REMOVED header: Text("Watering")
+                    Section {
+                        // 👉 ADDED icon
+                        HStack {
+                            Image(systemName: "drop")
+                            Picker("Watering Days", selection: $wateringDays) {
+                                ForEach(daysOptions, id: \.self) { Text($0) }
+                            }
                         }
                         
-                        Picker("Water Amount", selection: $waterAmount) {
-                            ForEach(waterOptions, id: \.self) { Text($0) }
+                        // 👉 ADDED icon, CHANGED "Water Amount" to "Water"
+                        HStack {
+                            Image(systemName: "drop")
+                            Picker("Water", selection: $waterAmount) {
+                                ForEach(waterOptions, id: \.self) { Text($0) }
+                            }
                         }
                     }
                 }
                 
-                // 👉 DELETE BUTTON - Fixed at bottom
+                // DELETE BUTTON - unchanged
                 Button(role: .destructive) {
                     showDeleteAlert = true
                 } label: {
