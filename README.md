@@ -22,3 +22,5 @@ Views (Planto): ListRemindersView, SetReminderView, EditPlantView, and so on.
 -Mark reminders complete as you water your plants.
 -When all are complete, an animated “All Done” screen appears.
 -You can delete the plant by swiping or if you want to edit a plant you can click on it and then you can start editing.
+  
+
